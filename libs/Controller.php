@@ -321,6 +321,14 @@ class Controller {
             $this->system['theme'] = 'manage';
         }
 
+        if( $this->pathName=='plate' ){
+            $options['has_topbar'] = false;
+            $options['has_footer'] = false;
+            $options['has_menu'] = false;
+
+            include_once WWW_APPS.'mPDF/mpdf.php';
+            $this->system['theme'] = 'plate';
+        }
 
         if( empty($this->system['theme']) ){
             $options = array(

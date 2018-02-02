@@ -68,8 +68,8 @@
 		}
 	?>
 	<div class="rfloat mbs">
-		<a class="btn btn-red" href="<?=URL?>plate/repots/daily<?=$path?>&type=pdf" target="_blank"><i class="icon-file-pdf-o"></i> PDF</a>
-		<a class="btn btn-green" href="<?=URL?>plate/repots/daily<?=$path?>&type=excel" target="_blank"><i class="icon-file-excel-o"></i> Excel</a>
+		<a class="btn btn-red" href="<?=URL?>plate/reports/daily<?=$path?>&type=pdf" target="_blank"><i class="icon-file-pdf-o"></i> PDF</a>
+		<!-- <a class="btn btn-green" href="<?=URL?>plate/reports/daily<?=$path?>&type=excel" target="_blank"><i class="icon-file-excel-o"></i> Excel</a> -->
 	</div>
 	<?php } ?>
 	<table class="table-bordered" width="100%">
