@@ -106,6 +106,12 @@
                 $_SUM['subtotal'] += $total;
             }
 
+            $room_total = 0;
+            foreach ($_POST["room"] as $key => $value) {
+                if( empty($value) ) continue;
+                $room_total += $value;
+            }
+
 
             if( $totalQty>$availableSeat && $status=='00' ){
                 $arr['error'] = 1;
@@ -114,6 +120,10 @@
             else if( empty($seats) ){
                 $arr['error'] = 1;
                 $arr['message'] = array('text'=>'Please, Input seat!', 'auto'=>1, 'load'=>1, 'bg'=>'red') ;
+            }
+            else if( empty($room_total) ){
+                $arr['error'] = 1;
+                $arr['message'] = array('text'=>'กรุณาเลือกห้อง', 'auto'=>1, 'load'=>1, 'bg'=>'red');
             }
             else{
 

@@ -159,15 +159,13 @@ class Controller {
     public $me = null;
     public function handleLogin(){
 
-        if ( Cookie::get( COOKIE_KEY_AGENCY ) ) {
-            $me = $this->model->query('agency')->get( Cookie::get( COOKIE_KEY_AGENCY ) );
-        }
-        
         if( $this->pathName == "office" ){
-            $me = array();
             if( Cookie::get( COOKIE_KEY_ADMIN ) ){
                 $me = $this->model->query('user')->get( Cookie::get( COOKIE_KEY_ADMIN ) );
             }
+        }
+        elseif ( Cookie::get( COOKIE_KEY_AGENCY ) ) {
+            $me = $this->model->query('agency')->get( Cookie::get( COOKIE_KEY_AGENCY ) );
         }
 
         if( !empty($me) ){
