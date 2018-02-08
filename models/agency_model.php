@@ -33,7 +33,7 @@ class Agency_Model extends Model {
             'limit' => isset($_REQUEST['limit'])? $_REQUEST['limit']:50,
             'more' => true,
 
-            'sort' => isset($_REQUEST['sort'])? $_REQUEST['sort']: 'agency.create_date',
+            'sort' => isset($_REQUEST['sort'])? $_REQUEST['sort']: 'create_date',
             'dir' => isset($_REQUEST['dir'])? $_REQUEST['dir']: 'DESC',
             
             'time'=> isset($_REQUEST['time'])? $_REQUEST['time']:time(),
@@ -46,18 +46,39 @@ class Agency_Model extends Model {
 
         $where_str = "";
         $where_arr = array();
+        if( isset($_REQUEST["company"]) ){
+            $options["company"] = $_REQUEST["company"];
+        }
+        if( isset($_REQUEST["status"]) ){
+            $options["status"] = $_REQUEST["status"];
+        }
 
         if( !empty($options["company"]) ){
             $where_str .= !empty($where_str) ? " AND " : "";
             $where_str .= "agency_company_id=:company";
             $where_arr[":company"] = $options["company"];
         }
+        if( $options["status"] != null ){
+            $where_str .= !empty($where_str) ? " AND " : "";
+            $where_str .= "agency.status=:status";
+            $where_arr[":status"] = $options["status"];
+        }
+        if( !empty($options["q"]) ){
+            $where_str .= !empty($where_str) ? " AND " : "";
+            $where_str .= "{$this->_cutNamefield}user_name LIKE :q
+                           OR {$this->_cutNamefield}fname LIKE :q
+                           OR {$this->_cutNamefield}lname LIKE :q
+                           OR {$this->_cutNamefield}nickname LIKE :q
+                           OR {$this->_cutNamefield}email LIKE :q
+                           OR {$this->_cutNamefield}tel LIKE :q";
+            $where_arr[":q"] = "%{$options["q"]}%";
+        }
 
         $arr['total'] = $this->db->count($this->_table, $where_str, $where_arr);
 
         $limit = $this->limited( $options['limit'], $options['pager'] );
         if( !empty($options["unlimit"]) ) $limit = '';
-        $orderby = $this->orderby( $options['sort'], $options['dir'] );
+        $orderby = $this->orderby( 'agency.'.$options['sort'], $options['dir'] );
         $where_str = !empty($where_str) ? "WHERE {$where_str}":'';
         $arr['lists'] = $this->buildFrag( $this->db->select("SELECT {$this->_field} FROM {$this->_table} {$where_str} {$orderby} {$limit}", $where_arr ), $options );
 

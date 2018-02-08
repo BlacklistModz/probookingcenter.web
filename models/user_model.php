@@ -13,7 +13,7 @@ class User_Model extends Model{
     public function insert(&$data){
         $data["create_date"] = date("c");
         $data["update_date"] = date("c");
-        $this->db->update($this->_objType, $data);
+        $this->db->insert($this->_objType, $data);
     }
     public function update($id, $data){
         $data["update_date"] = date("c");

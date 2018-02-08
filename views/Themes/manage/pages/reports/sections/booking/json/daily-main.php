@@ -63,8 +63,16 @@
 	<?php if( !empty($this->book["lists"]) ) { 
 		$path = '';
 		foreach ($this->book["options"] as $key => $value) {
-			$path .= !empty($path) ? "&" : "?";
-			$path .= "{$key}={$value}";
+			if( $key == "status" ){
+				foreach ($this->book["options"]["status"] as $i => $val) {
+					$path .= !empty($path) ? "&" : "?";
+					$path .= "{$key}[]={$val}";
+				}
+			}
+			else{
+				$path .= !empty($path) ? "&" : "?";
+				$path .= "{$key}={$value}";
+			}
 		}
 	?>
 	<div class="rfloat mbs">

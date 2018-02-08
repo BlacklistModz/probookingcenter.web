@@ -198,96 +198,10 @@ class agency extends Controller {
         }
         echo json_encode($arr);
     }
-    public function _save(){
-        if( empty($_POST) ) $this->error();
-
-        $id = !empty($_POST["id"]) ? $_POST["id"] : null;
-        if( !empty($id) ){
-            $item = $this->model->get($id);
-            if( empty($item) ) $this->error();
-        }
-
-        try{
-            $form = new Form();
-            $form   ->post('agen_fname')->val('is_empty')
-                    ->post('agen_lname')
-                    ->post('agen_nickname')
-                    ->post('agen_position')
-                    ->post('agen_email')
-                    ->post('agen_tel')
-                    ->post('agen_line_id')
-                    ->post('agen_skype')
-                    ->post('agen_user_name')->val('is_empty')
-                    ->post('agen_password')->val('is_empty')
-                    ->post('agen_note_com_name')->val('is_empty')
-                    ->post('agen_note_com_address1')
-                    ->post('agen_note_com_tel')->val('is_empty')
-                    ->post('agen_note_com_fax')
-                    ->post('agen_note_com_ttt_on')->val('is_empty');
-            $form->submit();
-            $postData = $form->fetch();
-
-            $has_name = true;
-            $has_email = true;
-            if( $this->model->is_username($postData['agen_user_name']) && $has_name ){
-                $arr['error']['agen_user_name'] = 'มีชื่อผู้ใช้นี้ในระบบแล้ว';
-            }
-            if( $this->model->is_email($postData['agen_email']) && $has_email ){
-                $arr['error']['agen_email'] = 'มีอีเมลนี้ในระบบแล้ว';
-            }
-
-            if( strlen($postData['agen_password']) < 6 ){
-                $arr['error']['agen_password'] = 'กรุณากรอกรหัสผ่าน 6 ตัวอักษรขึ้นไป';
-            }
-            if( $_POST["agen_password2"] != $postData['agen_password'] ){
-                $arr['error']['agen_password2'] = 'รหัสยืนยันไม่ตรงกับรหัสผ่าน';
-            }
-
-            // if( empty($item) && !empty($_POST["co"]) ){
-            //     $company = array();
-            //     foreach ($_POST["co"] as $key => $value) {
-            //         if( $key=='com_name' || $key=='com_tel' || $key=='com_ttt_on' ){
-            //             if( empty($value) ) $arr['error']['co_'.$key] = 'กรุณากรอกข้อมูล';
-            //         }
-
-            //         if( empty($value) ) continue;
-            //         $company['agen_note_'.$key] = $value;
-            //         /* $company .= !empty($company) ? " " : "";
-            //         $company .= $value; */
-            //     }
-            // }
-
-            if( empty($arr['error']) ){
-                if( !empty($id) ){
-                    $this->model->update($id, $postData);
-                }
-                else{
-                    $postData['agen_password'] = substr(md5(trim($postData['agen_password'])),0,20);
-                    $postData['agen_show'] = 2;
-                    $postData['status'] = 0;
-                    $postData['agency_company_id'] = 378;
-                    $this->model->insert($postData);
-                }
-
-                /* if( !empty($company) ){
-                    $this->model->insertCompany($company);
-                } */
-
-                $arr['message'] = 'ขอบคุณที่เข้าร่วมกับเรา';
-                $arr['url'] = isset($_REQUEST["next"]) ? $_REQUEST["next"] : 'refresh';
-            }
-
-        } catch (Exception $e) {
-            $arr['error'] = $this->_getError($e->getMessage());
-        }
-        echo json_encode($arr);
-    }
-
     public function listsCompany(){
         if( $this->format!='json' ) $this->error();
         echo json_encode( $this->model->query('agency_company')->lists() );
     }
-
     public function change_password($id=null){
         $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : $id;
         if( empty($id) || empty($this->me) || $this->format!='json' ) $this->error();
@@ -321,6 +235,144 @@ class agency extends Controller {
         else{
             $this->view->setData('item', $item);
             $this->view->render("forms/agency/change_password");
+        }
+    }
+
+    /* MANAGE OFFICE */
+    public function _add($company=null){
+        // $company = isset($_REQUEST["company"]) ? $_REQUEST["company"] : $company;
+        if( empty($this->me) || $this->format!='json' ) $this->error();
+        // || empty($company) 
+
+        $this->view->setData('company', $this->model->query('agency_company')->lists( array('unlimit'=>true) ));
+        $this->view->setData('status', $this->model->status());
+        $this->view->setPage('path','Themes/manage/forms/agency');
+        $this->view->render('add');
+    }
+    public function _edit($id=null){
+        $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : $id;
+        if( empty($id) || empty($this->me) || $this->format!='json' ) $this->error();
+
+        $item = $this->model->get($id);
+        if( empty($item) ) $this->error();
+
+        $this->view->setData('company', $this->model->query('agency_company')->lists( array('unlimit'=>true) ));
+        $this->view->setData('status', $this->model->status());
+        $this->view->setData('item', $item);
+        $this->view->setPage('path','Themes/manage/forms/agency');
+        $this->view->render('add');
+    }
+    public function _save(){
+        if( empty($_POST) ) $this->error();
+
+        $id = isset($_POST["id"]) ? $_POST["id"] : null;
+        if( !empty($id) ){
+            $item = $this->model->get($id);
+            if( empty($item) ) $this->error();
+        }
+
+        try{
+            $form = new Form();
+            $form   ->post('agen_fname')->val('is_empty')
+                    ->post('agen_lname')
+                    ->post('agen_nickname')
+                    ->post('agen_position')
+                    ->post('agen_email')->val('email')
+                    ->post('agen_tel')
+                    ->post('agen_line_id')
+                    ->post('agen_skype')
+                    ->post('agency_company_id')->val('is_empty')
+                    ->post('agen_role')->val('is_empty')
+                    ->post('status')
+                    ->post('agen_user_name')->val('is_empty');
+            $form->submit();
+            $postData = $form->fetch();
+
+            // if( empty($item) ){
+            //     $postData["agen_user_name"] = $_POST["agen_user_name"];
+            //     if( empty($postData["agen_user_name"]) ){
+            //         $arr["error"]["user_name"] = "กรุณากรอกข้อมูล";
+            //     }
+            // }
+
+            $has_user = true;
+            $has_email = true;
+            if( !empty($item) ){
+                if( $item['user_name'] == $postData['agen_user_name'] ) $has_user = false;
+                if( $item['email'] == $postData["agen_email"] ) $has_email = false;
+            }
+            if( $this->model->is_username($postData["agen_user_name"]) && $has_user ){
+                $arr['error']['agen_user_name'] = 'มีชื่อผู้ใช้นี้ในระบบแล้ว';
+            }
+            if( $this->model->is_email($postData["agen_email"]) && $has_email ){
+                $arr['error']['agen_email'] = 'มีอีเมลนี้ในระบบแล้ว';
+            }
+
+            if( empty($id) ){
+                if( strlen($_POST["agen_password"]) < 6 ){
+                    $arr['error']['agen_password'] = 'รหัสผ่านต้องมีความยาว 6 ตัวอักษรขึ้นไป';
+                }
+                elseif( $_POST["agen_password"] != $_POST["agen_password2"] ){
+                    $arr['error']['agen_password2'] = 'รหัสยืนยันไม่ตรงกับรหัสผ่าน';
+                }
+                else{
+                    $postData['agen_password'] = substr(md5(trim($_POST["agen_password"])),0,20);
+                }
+            }
+
+            if( empty($arr['error']) ){
+                if( !empty($id) ){
+                    $this->model->update($id, $postData);
+                }
+                else{
+                    $this->model->insert($postData);
+                }
+                $arr['message'] = 'บันทึกข้อมูลเรียบร้อย';
+                $arr['url'] = 'refresh';
+            }
+
+        } catch (Exception $e) {
+            $arr['error'] = $this->_getError($e->getMessage());
+        }
+        echo json_encode($arr);
+    }
+    public function _del($id=null){
+
+    }
+    public function password($id=null){
+        $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : $id;
+        if( empty($id) || empty($this->me) || $this->format!='json' ) $this->error();
+
+        $item = $this->model->query("agency")->get($id);
+        if( empty($item) ) $this->error();
+
+        if( !empty($_POST) ){
+            $form = new Form();
+            $form   ->post("new_password")->val('is_empty')
+                    ->post("new_password2")->val('is_empty');
+            $form->submit();
+            $postData = $form->fetch();
+
+            if( strlen($postData["new_password"]) < 6 ){
+                $arr['error']["new_password"] = "รหัสผ่านต้องมีความยาว 6 ตัวอักษรขึ้นไป";
+            }
+            elseif( $postData["new_password"] != $postData["new_password2"] ){
+                $arr['error']["new_password2"] = "กรุณากรอกรหัสผ่านให้ตรงกัน";
+            }
+
+            if( empty($arr['error']) ){
+                $password = substr(trim(md5($postData["new_password"])), 0, 20);
+                $this->model->update($id, array("agen_password"=>$password));
+
+                $arr["message"] = "เปลี่ยนรหัสผ่านเรียบร้อย";
+            }
+
+            echo json_encode($arr);
+        }
+        else{
+            $this->view->setData('item', $item);
+            $this->view->setPage('path', 'Themes/manage/forms/agency');
+            $this->view->render("change_password");
         }
     }
 }

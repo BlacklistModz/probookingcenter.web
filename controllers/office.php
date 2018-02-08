@@ -33,14 +33,21 @@ class Office extends Controller {
     		// }
         }
         elseif( $section == "users" ){
-            if( $this->format=='json' ){
-                $results = $this->model->query('user')->lists();
-                $this->view->setData('results', $results);
-                $render = "settings/sections/users/users/json";
+
+            if( empty($tap) ) $tap = 'users';
+            if( $tap == 'users' ){
+                if( $this->format=='json' ){
+                    $results = $this->model->query('user')->lists();
+                    $this->view->setData('results', $results);
+                    $render = "settings/sections/users/users/json";
+                }
+                else{
+                    $this->view->setData('status', $this->model->query('user')->status());
+                    $this->view->setData('group', $this->model->query('user')->group());
+                }
             }
-            else{
-                $this->view->setData('status', $this->model->query('user')->status());
-                $this->view->setData('group', $this->model->query('user')->group());
+            elseif( $tap == 'group' ){
+                $this->view->setData('data', $this->model->query('user')->group());
             }
         }
         else{
@@ -73,5 +80,29 @@ class Office extends Controller {
             $this->error();
         }
         $this->view->render( !empty($render) ? $render : "reports/display" );
+    }
+
+    public function agency($id=null){
+
+        $this->view->setPage('title', 'เอเจนซี่');
+        $this->view->setPage('on', 'agency');
+
+        $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : $id;
+        if( !empty($id) ){
+
+        }
+        else{
+            if( $this->format=='json' ){
+                $results = $this->model->query('agency')->lists();
+                $this->view->setData('results', $results);
+                $render = "agency/lists/json";
+            }
+            else{
+                $this->view->setData('company', $this->model->query('agency_company')->lists( array('unlimit'=>true) ));
+                $this->view->setData('status', $this->model->query('agency')->status());
+                $render = "agency/lists/display";
+            }
+        }
+        $this->view->render( $render );
     }
 }

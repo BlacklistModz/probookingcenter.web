@@ -86,9 +86,16 @@ class Reports_Model extends Model{
             $where_arr[":agency"] = $options["agency"];
         }
         if( $options["status"] != null ){
-            $where_str .= !empty($where_str) ? " AND " : "";
-            $where_str .= "b.status=:status";
-            $where_arr[":status"] = $options["status"];
+
+            $status = '';
+            foreach ($options["status"] as $key => $value) {
+                $status .= !empty($status) ? "," : "";
+                $status .= $value;
+            }
+            if( !empty($status) ){
+                $where_str .= !empty($where_str) ? " AND " : "";
+                $where_str .= "b.status IN ({$status})";
+            }
         }
 
         $where_str = !empty($where_str) ? "WHERE {$where_str}" : "";

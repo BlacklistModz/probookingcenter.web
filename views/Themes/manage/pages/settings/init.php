@@ -21,7 +21,8 @@ if( !empty($sub) ){
 /* Accounts */
 /**/
 $sub = array();
-$sub[] = array('text'=> $this->lang->translate('Users'),'key'=>'users','url'=>$this->pageURL.'settings/users');
+$sub[] = array('text'=> 'ผู้ใช้งาน','key'=>'users','url'=>$this->pageURL.'settings/users');
+$sub[] = array('text'=> 'กลุ่มผู้ใช้งาน','key'=>'group','url'=>$this->pageURL.'settings/users/group');
 // $sub[] = array('text'=> $this->lang->translate('User Roles'),'key'=>'roles','url'=>$this->pageURL.'settings/users/roles');
 
 /* foreach ($sub as $key => $value) {

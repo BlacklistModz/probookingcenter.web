@@ -57,16 +57,20 @@
 								<option value="">- เลือกบริษัท -</option>
 							</select>
 						</li>
+					</ul>
+				</div>
+				<div class="clearfix mtm">
+					<ul>
 						<li style="display:inline-block;">
 							<label for="status" class="label fwb">สถานะ</label>
-							<select name="status" class="inputtext">
-								<option value="">- ทั้งหมด -</option>
-								<?php 
-								foreach ($this->status as $key => $value) {
-									echo '<option value="'.$value["id"].'">'.$value["name"].'</option>';
-								}
+							<?php foreach ($this->status as $key => $value) { 
+								$chk = '';
+								if( $value["id"] == 20 || $value["id"] == 25 || $value["id"] == 30 || $value["id"] == 35 ) $chk = 'checked="1"';
 								?>
-							</select>
+								<label class="checkbox mrs mrm">
+									<input type="checkbox" <?=$chk?> name="status[]" value="<?=$value["id"]?>"> <?=$value["name"]?>
+								</label>
+							<?php } ?>
 						</li>
 						<li style="display:inline-block;">
 							<button class="btn btn-green js-search" style="margin-top: -1.5mm;"><i class="icon-search"></i></button>
@@ -85,15 +89,25 @@
 </div>
 <script type="text/javascript">
 	$('.js-search').click(function(){
+
 		var date = $('[name=date]').val();
 		var country = $('[name=country_id]').val();
 		var series = $('[name=ser_id]').val();
 		var sale = $('[name=user_id]').val();
 		var company = $('[name=agency_company_id]').val();
 		var agency = $('[name=agen_id]').val();
-		var status = $('[name=status]').val();
+		var status = [];
+		$('input[name^="status"]').each(function() {
+			if( this.checked ){
+				status.push($(this).val());
+			}
+		});
 
-		$.get( Event.URL + 'reports/booking_daily/', {date:date, country:country, series: series, sale:sale, company:company, agency:agency, status:status}, function(html){
+		$.ajax({
+			type: "POST",
+			url: Event.URL + 'reports/booking_daily/',
+			data: { date:date, country:country, series: series, sale:sale, company:company, agency:agency, status:status }
+		}).done(function( html ) {
 			$("#reportDaily").html( html );
 		});
 	});

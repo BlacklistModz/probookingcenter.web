@@ -17,6 +17,11 @@ echo '<div class="navigation-main-header"><div class="anchor clearfix">'.$image.
 
 echo '<div class="navigation-main-content">';
 
+$agency[] = array('key'=>'agency', 'text'=>'เอเจนซี่', 'link'=>$this->pageURL.'agency', 'icon'=>'users');
+if( !empty($agency) ){
+	echo $this->fn->manage_nav($agency, $this->getPage('on'));
+}
+
 #reports
 $reports[] = array('key'=>'reports','text'=>'Reports','link'=>$this->pageURL.'reports','icon'=>'line-chart');
 // $reports[] = array('key'=>'report_payment','text'=>'Report Payment','link'=>$this->pageURL.'reports/payment','icon'=>'book');

@@ -1185,6 +1185,12 @@ to{transform:translateY(0)}}
 .listpage2-actions #more-link .disabled {
 	opacity: .5;
 }
+.listpage2-actions #more-link .prev {
+	padding:5px;
+}
+.listpage2-actions #more-link .next {
+	padding:5px;
+}
 .listpage2-actions .rfloat>li:last-child{margin-right:0}
 .form-insert-product.size250 #image_cover_fieldset{width:250px;min-height:250px;left:-250px}
 .form-insert-product.size250{margin-left:250px;min-height:250px}
@@ -3352,6 +3358,25 @@ table.table-plan td{vertical-align: top;}
 }
 .status_55{
     background-color:#ff902b; 
+    color:#fff; 
+    padding: 1mm; 
+    border-radius:1mm;
+}
+
+.agen_status_0{
+    background-color:#2f80e7; 
+    color:#fff; 
+    padding: 1mm; 
+    border-radius:1mm;
+}
+.agen_status_1{
+    background-color:#43d967; 
+    color:#fff; 
+    padding: 1mm; 
+    border-radius:1mm;
+}
+.agen_status_2{
+    background-color:#ec2121; 
     color:#fff; 
     padding: 1mm; 
     border-radius:1mm;

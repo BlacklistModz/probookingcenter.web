@@ -64,7 +64,7 @@ if( !empty($this->results['lists']) ){
         $dropdown = array();
         $dropdown[] = array(
             'text' => 'Change Password',
-            'href' => $url.'password/'.$item['id'],
+            'href' => $url.'change_password/'.$item['id'],
             'attr' => array('data-plugins'=>'dialog'),
             'icon' => 'key'
         );
