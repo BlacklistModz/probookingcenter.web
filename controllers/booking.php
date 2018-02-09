@@ -121,9 +121,11 @@
                 $arr['error'] = 1;
                 $arr['message'] = array('text'=>'Please, Input seat!', 'auto'=>1, 'load'=>1, 'bg'=>'red') ;
             }
-            else if( empty($room_total) ){
-                $arr['error'] = 1;
-                $arr['message'] = array('text'=>'กรุณาเลือกห้อง', 'auto'=>1, 'load'=>1, 'bg'=>'red');
+            else if( empty($_POST["customername"]) || empty($_POST["customertel"]) ){
+                $arr['error']['customername'] = 'กรุณากรอกข้อมูลให้ครบถ้วน';
+                $arr['error']['customertel'] = 'กรุณากรอกข้อมูลให้ครบถ้วน';
+
+                $arr['message'] = array('text'=>'กรุณากรอกชื่อ-นามสกุล และเบอร์โทรศัพท์ของลูกค้า', 'auto'=>1, 'load'=>1, 'bg'=>'red');
             }
             else{
 

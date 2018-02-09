@@ -33,6 +33,14 @@ if( !empty($sub) ){
 	$menu[] = array('text'=> $this->lang->translate('Accounts'),'sub' => $sub, 'url' => $this->pageURL.'settings/users/');
 }
 
+/* Agency */
+$sub = array();
+$sub[] = array('text'=>'บริษัทเอเจนซี่', 'key'=>'company', 'url'=>$this->pageURL.'settings/agency/company');
+if( !empty($sub) ){
+	$this->count_nav+=count($sub);
+	$menu[] = array('text'=> 'Agency', 'sub'=>$sub, 'url'=>$this->pageURL.'settings/agency');
+}
+
 // /**/
 // /* Sponsor */
 // /**/

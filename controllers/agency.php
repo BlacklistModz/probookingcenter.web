@@ -11,7 +11,7 @@ class agency extends Controller {
     }
     public function add($company=null){
         // $company = isset($_REQUEST["company"]) ? $_REQUEST["company"] : $company;
-        if( empty($this->me) || $this->format!='json' ) $this->error();
+        if( $this->format!='json' ) $this->error();
         // || empty($company) 
 
         $this->view->setData('status', $this->model->status());
@@ -241,7 +241,7 @@ class agency extends Controller {
     /* MANAGE OFFICE */
     public function _add($company=null){
         // $company = isset($_REQUEST["company"]) ? $_REQUEST["company"] : $company;
-        if( empty($this->me) || $this->format!='json' ) $this->error();
+        if( $this->format!='json' ) $this->error();
         // || empty($company) 
 
         $this->view->setData('company', $this->model->query('agency_company')->lists( array('unlimit'=>true) ));
@@ -251,7 +251,7 @@ class agency extends Controller {
     }
     public function _edit($id=null){
         $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : $id;
-        if( empty($id) || empty($this->me) || $this->format!='json' ) $this->error();
+        if( empty($id) || $this->format!='json' ) $this->error();
 
         $item = $this->model->get($id);
         if( empty($item) ) $this->error();
@@ -341,7 +341,7 @@ class agency extends Controller {
     }
     public function password($id=null){
         $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : $id;
-        if( empty($id) || empty($this->me) || $this->format!='json' ) $this->error();
+        if( empty($id) || $this->format!='json' ) $this->error();
 
         $item = $this->model->query("agency")->get($id);
         if( empty($item) ) $this->error();

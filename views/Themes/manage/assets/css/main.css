@@ -740,6 +740,7 @@ body.hidden-tobar #tobar{display:none;height:0}
 .setting-header-taps .tap.active:before{content:'';position:absolute;left:0;right:0;bottom:-1px;height:1px;background-color:#2196f3}
 .SettingCol .SettingCol-header{max-width:inherit;padding-top:20px;padding-bottom:10px}
 .SettingCol-headerActions >li{float:left;margin-right:10px;line-height:30px}
+.SettingCol-headerActions >li>a.next{margin: 5px;}
 .SettingCol-headerActions #more-link{line-height:30px;background-color:#ddd;padding-left:6px;padding-right:6px;border-radius:15px}
 .SettingCol-headerActions >li.divider{width:1px;height:20px;margin-top:7px;background-color:#ccc}
 .SettingCol-headerActions >li .title{display:inline-block}

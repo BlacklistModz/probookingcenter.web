@@ -32,6 +32,10 @@ class Agency_company_model extends Model  {
         $where_str = "";
         $where_arr = array();
 
+        if( isset($_REQUEST["status"]) ){
+            $options["status"] = $_REQUEST["status"];
+        }
+
         if( !empty($options['q']) ){
 
             $where_str .= !empty( $where_str ) ? " AND ":'';
@@ -40,7 +44,7 @@ class Agency_company_model extends Model  {
             $where_arr[':qfull'] = $options['q'];
         }
 
-        if( !empty($options["status"]) ){
+        if( isset($options["status"]) ){
             $where_str .= !empty($where_str) ? " AND " : "";
             $where_str .= "status=:status";
             $where_arr[":status"] = $options["status"];
@@ -70,7 +74,7 @@ class Agency_company_model extends Model  {
     }
     public function get($id, $options=array()){
         
-        $sth = $this->db->prepare("SELECT {$this->_field} FROM {$this->_table} WHERE {$this->_cutNamefield}id=:id LIMIT 1");
+        $sth = $this->db->prepare("SELECT {$this->_field} FROM {$this->_table} WHERE {$this->_cutNamefield}com_id=:id LIMIT 1");
         $sth->execute( array(
             ':id' => $id
         ) );
@@ -82,6 +86,7 @@ class Agency_company_model extends Model  {
     public function convert($data, $options=array()){
 
     	$data = $this->_cutFirstFieldName($this->_cutNamefield, $data);
+        $data['status_arr'] = $this->getStatus($data['status']);
         $data['permit']['del'] = true;
 
         return $data;
@@ -98,10 +103,31 @@ class Agency_company_model extends Model  {
 	}
 	public function update($id, $data){
 		$data['update_date'] = date("c");
-		$this->db->update($this->_objType, $data, "{$this->_cutNamefield}id={$id}");
+		$this->db->update($this->_objType, $data, "{$this->_cutNamefield}com_id={$id}");
 	}
 	public function delete($id){
-		$this->db->delete($this->_objType, "{$this->_cutNamefield}id={$id}");
+		$this->db->delete($this->_objType, "{$this->_cutNamefield}com_id={$id}");
 	}
 
+    public function status(){
+        $a[] = array('id'=>0, 'name'=>'รอการตรวจสอบ');
+        $a[] = array('id'=>1, 'name'=>'เปิดใช้งาน');
+        $a[] = array('id'=>2, 'name'=>'ระงับการใช้งาน');
+
+        return $a;
+    }
+    public function getStatus($id=null){
+        $data = array();
+        foreach ($this->status() as $key => $value) {
+            if( $value["id"] == $id ){
+                $data = $value;
+                break;
+            }
+        }
+        return $data;
+    }
+
+    public function is_name($text){
+        return $this->db->count($this->_objType, "{$this->_cutNamefield}com_name=:text", array(':text'=>$text));
+    }
 }

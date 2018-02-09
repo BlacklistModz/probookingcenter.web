@@ -7,9 +7,7 @@ if( !empty($this->item) ){
 	$arr['title'] = "แก้ไข {$title}";
 	$arr['hiddenInput'][] = array('name'=>'id','value'=>$this->item['id']);
 }
-if(!empty($this->item) && $this->item['id'] == $this->me['id']){
-    $arr["title"] = "จัดการโปรไฟล์";
-}
+
 $form = new Form();
 $form = $form ->create()
 			  ->elem('div')

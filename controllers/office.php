@@ -50,6 +50,22 @@ class Office extends Controller {
                 $this->view->setData('data', $this->model->query('user')->group());
             }
         }
+        elseif( $section == 'agency' ){
+            if( empty($tap) ) $tap = 'company';
+            if( $tap == 'company' ){
+                if( $this->format=='json' ){
+                    $results = $this->model->query('agency_company')->lists();
+                    $this->view->setData('results', $results);
+                    $render = "settings/sections/agency/company/json";
+                }
+                else{
+                    $this->view->setData('status', $this->model->query('agency_company')->status());
+                }
+            }
+            else{
+                $this->error();
+            }
+        }
         else{
         	$this->error();
         }
