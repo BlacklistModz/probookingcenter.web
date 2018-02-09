@@ -24,7 +24,7 @@ if( !empty($agency) ){
 
 #reports
 $reports[] = array('key'=>'reports','text'=>'Reports','link'=>$this->pageURL.'reports','icon'=>'line-chart');
-// $reports[] = array('key'=>'report_payment','text'=>'Report Payment','link'=>$this->pageURL.'reports/payment','icon'=>'book');
+//$reports[] = array('key'=>'report_payment','text'=>'Report Payment','link'=>$this->pageURL.'reports/','icon'=>'book');
 // foreach ($reports as $key => $value) {
 // 	if( empty($this->permit[$value['key']]['view']) ) unset($reports[$key]);
 // }

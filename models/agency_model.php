@@ -109,16 +109,21 @@ class Agency_Model extends Model {
     }
     public function convert($data, $options=array()){
 
-    	$data = $this->_cutFirstFieldName($this->_cutNamefield, $data);
-        $data['permit']['del'] = true;
+        $data = $this->_cutFirstFieldName($this->_cutNamefield, $data);
+        
+        $data['total_booking'] = $this->db->count('booking', "agen_id={$data["id"]}");
 
+        $data['permit']['del'] = true;
+        if( $data['total_booking'] > 0 ){
+            $data['permit']['del'] = false;
+        }
 
         $data['fullname'] = $data['fname'];
         $data['lname'] = str_replace('-', '', $data['lname']);
         if( !empty($data['lname']) ){
             $data['fullname'] .= " {$data['lname']}";
         }
-
+     
         $data['agen_status'] = $this->getStatus($data['status']);
 
         return $data;

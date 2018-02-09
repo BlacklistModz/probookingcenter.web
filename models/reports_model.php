@@ -47,18 +47,17 @@ class Reports_Model extends Model{
                   LEFT JOIN agency_company ac ON agen.agency_company_id=ac.agen_com_id
                   LEFT JOIN user s ON b.user_id=s.user_id";
 
-        $options = array_merge( array(
-            'date' => isset($_REQUEST["date"]) ? $_REQUEST["date"] : date("Y-m-d"),
-        ),$options );
+
 
         $where_str = '';
         $where_arr = array();
 
-        if( !empty($options["date"]) ){
+
+        if( !empty($options["start"]) && !empty($options["end"]) ){
             $where_str .= !empty($where_str) ? " AND " : "";
             $where_str .= "(book_date BETWEEN :s AND :e)";
-            $where_arr[":s"] = date("Y-m-d 00:00:00", strtotime($options["date"]));
-            $where_arr[":e"] = date("Y-m-d 23:59:59", strtotime($options["date"]));
+            $where_arr[":s"] = $options["start"];
+            $where_arr[":e"] = $options["end"];
         }
         if( !empty($options["country"]) ){
             $where_str .= !empty($where_str) ? " AND " : "";

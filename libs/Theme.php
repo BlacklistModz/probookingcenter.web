@@ -78,7 +78,7 @@ class Theme extends View{
             }
         }
 
-        $mode = 'light';
+        $mode = 'blue';
         if( !empty($this->me['mode']) ){
 
             switch ($this->me['mode']) {

@@ -65,6 +65,7 @@ class Office extends Controller {
         if( $section == "booking" ){
             if( empty($tap) ) $tap = "daily";
             $this->view->setData('tap', $tap);
+           // print_r($tap);die;
             if( $tap == "daily" ){
 
                 $this->view->js('jquery/jquery-selector.min')
@@ -74,6 +75,14 @@ class Office extends Controller {
                 $this->view->setData('sales', $this->model->query('user')->lists( array('group'=>5, 'unlimit'=>true) ));
                 $this->view->setData('company', $this->model->query('agency_company')->lists( array('unlimit'=>true, 'status'=>1,'sort'=>'com_name') ));
                 $this->view->setData('status', $this->model->query('booking')->status());
+            }else if($tap =="monthy"){
+               
+                $this->view->setData('country', $this->model->query('products')->categoryList());
+                $this->view->setData('sales', $this->model->query('user')->lists( array('group'=>5, 'unlimit'=>true) ));
+                $this->view->setData('company', $this->model->query('agency_company')->lists( array('unlimit'=>true, 'status'=>1,'sort'=>'com_name') ));
+                $this->view->setData('status', $this->model->query('booking')->status());
+            }else{
+                $this->error();
             }
         }
         else{
@@ -81,6 +90,7 @@ class Office extends Controller {
         }
         $this->view->render( !empty($render) ? $render : "reports/display" );
     }
+    
 
     public function agency($id=null){
 
@@ -104,5 +114,12 @@ class Office extends Controller {
             }
         }
         $this->view->render( $render );
+    }
+    public function payment(){
+        $this->view->setPage('title', 'การชำระเงิน');
+        $this->view->setPage('on', 'payment_management');
+        $this->view->setData('item', $this->model->query('payment')->status());
+        print_r( $this->model->query('payment')->lists(array('unlimit'=>true)));die;
+            
     }
 }

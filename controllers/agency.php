@@ -320,7 +320,7 @@ class agency extends Controller {
                 }
             }
 
-            if( empty($arr['error']) ){
+            if( empty($arr['error'])){
                 if( !empty($id) ){
                     $this->model->update($id, $postData);
                 }
@@ -337,8 +337,31 @@ class agency extends Controller {
         echo json_encode($arr);
     }
     public function _del($id=null){
+        $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : $id;
+        if(empty($id)  || $this->format != 'json') $this->error();
 
+        $item = $this->model->query('agency')->get($id);
+        if(empty($item)) $this->error();
+
+         if(!empty($_POST)){
+            if( !empty($item['permit']['del']) ){
+                $this->model->delete($id);
+                $arr['message'] = 'ลบข้อมูลเรียบร้อย';
+                $arr['url'] = 'refresh';
+            }
+            else{
+                $arr['message'] = 'ไม่สามารถลบข้อมูลได้';
+            }
+            echo json_encode($arr);
+         }else{
+            
+            $this->view->setData('item', $item);
+            $this->view->setPage('path', 'Themes/manage/forms/agency');
+            $this->view->render('del');
+         }
+        //print_r($this->me); 
     }
+
     public function password($id=null){
         $id = isset($_REQUEST["id"]) ? $_REQUEST["id"] : $id;
         if( empty($id) || empty($this->me) || $this->format!='json' ) $this->error();

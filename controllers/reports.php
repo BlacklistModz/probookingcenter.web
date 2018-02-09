@@ -19,8 +19,13 @@ class Reports extends Controller {
         $agency = isset($_REQUEST["agency"]) ? $_REQUEST["agency"] : null;
         $status = isset($_REQUEST["status"]) ? $_REQUEST["status"] : null;
 
+        $start = date("Y-m-d 00:00:00", strtotime($date));
+        $end = date("Y-m-d 23:59:59", strtotime($date));
+
         $options = array(
-            "date"=>$date,
+            // "date"=>$date,
+            "start"=>$start,
+            "end"=>$end,
             "country"=>$country,
             "series"=>$series,
             "sale"=>$sale,
@@ -34,6 +39,39 @@ class Reports extends Controller {
         $this->view->setPage('path', 'Themes/manage/pages/reports/sections/booking/json');
         $this->view->render("daily-main");
     }
+    public function booking_monthy(){
+        // $date = isset($_REQUEST["date"]) ? $_REQUEST["date"] : date("Y-m-d");
+
+        //$date = isset()
+        $month = isset($_REQUEST['month']) ? $_REQUEST['month'] : date("m");
+        $year = isset($_REQUEST['year']) ? $_REQUEST['year'] : date("Y");
+        $country = isset($_REQUEST["country"]) ? $_REQUEST["country"] : null;
+        $series = isset($_REQUEST["series"]) ? $_REQUEST["series"] : null;
+        $sale = isset($_REQUEST["sale"]) ? $_REQUEST["sale"] : null;
+        $company = isset($_REQUEST["company"]) ? $_REQUEST["company"] : null;
+        $agency = isset($_REQUEST["agency"]) ? $_REQUEST["agency"] : null;
+        $status = isset($_REQUEST["status"]) ? $_REQUEST["status"] : null;
+
+        $start = date("Y-m-d 00:00:00", strtotime("{$year}-{$month}-01"));
+        $end = date("Y-m-t 23:59:59", strtotime("{$year}-{$month}-01"));
+
+        $options = array(
+            "start"=>$start,
+            "end"=>$end,
+            "country"=>$country,
+            "series"=>$series,
+            "sale"=>$sale,
+            "company"=>$company,
+            "agency"=>$agency,
+            "status"=>$status
+        );
+
+        $book = $this->model->listsBooking( $options );
+        $this->view->setData('book', $book);
+        $this->view->setPage('path', 'Themes/manage/pages/reports/sections/booking/json');
+        $this->view->render("daily-main");
+    }
+
 
     /* GET DATA JSON */
     public function getProducts($country_id=null){

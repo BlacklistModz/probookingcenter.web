@@ -14,3 +14,11 @@ if( !empty($sub) ){
 	$this->count_nav+=count($sub);
 	$menu[] = array('text' => 'Booking Reports', 'url' => $this->pageURL.'reports/daily', 'sub' => $sub);
 }
+
+
+$sub = array();
+$sub[] = array('text' => 'Daily Payment Report','key' => 'pay_daily','url' => $this->pageURL.'reports/payment/pay_daily');
+if( !empty($sub) ){
+	$this->count_nav+=count($sub);
+	$menu[] = array('text' => 'Payment Reports', 'url' => $this->pageURL.'reports/payment', 'sub' => $sub);
+}

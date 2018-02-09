@@ -82,14 +82,14 @@ class Agency_Model extends Model {
 
     	$data = $this->_cutFirstFieldName($this->_cutNamefield, $data);
         $data['permit']['del'] = true;
-
-
+      
+        $data['booking_total'] = $this->db->count("booking", "agen_id={$data['id']}");
         $data['fullname'] = $data['fname'];
         $data['lname'] = str_replace('-', '', $data['lname']);
         if( !empty($data['lname']) ){
             $data['fullname'] .= " {$data['lname']}";
         }
-
+        
         return $data;
     }
     public function insert(&$data){
