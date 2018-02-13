@@ -121,4 +121,26 @@ class Office extends Controller {
         }
         $this->view->render( $render );
     }
+      public function payment(){
+
+        $this->view->setPage('title', 'จัดการชำระเงิน');
+        $this->view->setPage('on', 'agency');
+
+      
+            if( $this->format=='json' ){
+                $results = $this->model->query('payment')->lists();
+                $this->view->setData('results', $results);
+                $render = "payment/lists/json";
+            }
+            else{
+        
+                $this->view->setData('payment', $this->model->query('payment')->lists( array('unlimit'=>true) ));
+               //print_r($this->model->query('payment')->lists( array('unlimit'=>true)));die;
+                $this->view->setData('status', $this->model->query('agency')->status());
+                $render = "payment/lists/display";
+            }
+            $this->view->render( $render );
+        }
+        
+    
 }
