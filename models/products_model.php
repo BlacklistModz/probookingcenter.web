@@ -401,6 +401,4 @@ class Products_Model extends Model{
             return $sth->fetch( PDO::FETCH_ASSOC );
         } return array();
     }
-
-
 }
