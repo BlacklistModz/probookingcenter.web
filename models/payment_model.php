@@ -142,31 +142,38 @@ class Payment_Model extends Model{
             ':username' => $text
         ) );
         
+        $fdata = $sth->fetch( PDO::FETCH_ASSOC ) ;
 
         if( $sth->rowCount()==1 ){
-            return  $sth->fetch( PDO::FETCH_ASSOC ) ;
-        } return array();
+            return "{$fdata["user_fname"]} {$fdata["user_lname"]}";
+        } return "";
     }
     public function getAgency($text){
         $sth = $this->db->prepare("SELECT agen_fname,agen_nickname, agen_lname FROM agency WHERE agen_user_name=:username LIMIT 1");
         $sth->execute( array(
             ':username' => $text
         ) );
+
+        $fdata = $sth->fetch( PDO::FETCH_ASSOC ) ;
+
         if( $sth->rowCount()==1 ){
-            return  $sth->fetch( PDO::FETCH_ASSOC ) ;
-        } return array();
+            return "{$fdata["agen_fname"]} {$fdata["agen_lname"]}";
+        } return "";
     }
-  public function   getAgencyCompany($text){
+    public function getAgencyCompany($text){
       $sth = $this->db->prepare("SELECT agen_com_name FROM agency_company WHERE agen_com_id = :id LIMIT 1");
       $sth->execute(
           array(
               ':id'=>$text
-            )
-          );
+          )
+        );
+
+      $fdata = $sth->fetch( PDO::FETCH_ASSOC );
+
           if( $sth->rowCount()==1 ){
-            return  $sth->fetch( PDO::FETCH_ASSOC ) ;
-        } return array();
-  } 
+            return $fdata["agen_com_name"];
+        } return "";
+    } 
     
     
 }

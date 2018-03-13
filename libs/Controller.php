@@ -159,10 +159,8 @@ class Controller {
     public $me = null;
     public function handleLogin(){
 
-        if( $this->pathName == "office" ){
-            if( Cookie::get( COOKIE_KEY_ADMIN ) ){
-                $me = $this->model->query('user')->get( Cookie::get( COOKIE_KEY_ADMIN ) );
-            }
+        if( Cookie::get( COOKIE_KEY_ADMIN ) ){
+            $me = $this->model->query('user')->get( Cookie::get( COOKIE_KEY_ADMIN ) );
         }
         elseif ( Cookie::get( COOKIE_KEY_AGENCY ) ) {
             $me = $this->model->query('agency')->get( Cookie::get( COOKIE_KEY_AGENCY ) );
@@ -184,7 +182,7 @@ class Controller {
             $this->view->me = $this->me;
             $this->view->setData('me', $this->me);
 
-            if( $this->pathName == "office" ){
+            if( Cookie::get( COOKIE_KEY_ADMIN ) ){
                 Cookie::set( COOKIE_KEY_ADMIN, $this->me['id'], time() + (3600*24));
             }
 
@@ -335,6 +333,28 @@ class Controller {
 
             $this->system['theme'] = 'default';
         }
+
+        if( empty($this->system['updated']) ){
+            $this->system['updated'] = date("Y-m-d", strtotime("-1 day"));
+        }
+        $date = date("Y-m-d");
+        $update = date("Y-m-d", strtotime($this->system["updated"]));
+        if( $date > $update ){
+
+            /* UPDATE SYSTEM FOR BOOKING */
+            $this->model->query('system')->update_close_period();
+            $this->model->query('system')->update_prefix_number();
+
+            /* SET SYSTEM */
+            $this->system["updated"] = date("Y-m-d H:i:s");
+
+            $continue = array('contacts', 'navigation', 'url', 'theme');
+            foreach ($this->system as $key => $value) {
+                if( in_array($key, $continue) ) continue;
+                $this->model->query('system')->set($key, $value);
+            }
+        }
+
         $this->view->setData('categoryList', $this->model->query('products')->categoryList());
         $this->view->setPage('theme', $this->system['theme']);
         $this->view->setPage('theme_options', $options);  

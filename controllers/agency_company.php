@@ -14,6 +14,7 @@ class agency_company extends Controller {
     	if( $this->format!='json' ) $this->error();
 
     	$this->view->setData('status', $this->model->status());
+        $this->view->setData('geo', $this->model->query('system')->geo());
     	$this->view->setPage('path','Themes/manage/forms/agency/company');
     	$this->view->render('add');
     }
@@ -26,6 +27,7 @@ class agency_company extends Controller {
 
     	$this->view->setData('item', $item);
     	$this->view->setData('status', $this->model->status());
+        $this->view->setData('geo', $this->model->query('system')->geo());
     	$this->view->setPage('path','Themes/manage/forms/agency/company');
     	$this->view->render('add');
     }
@@ -43,6 +45,9 @@ class agency_company extends Controller {
     		$form 	->post('agen_com_name')->val('is_empty')
     				->post('agen_com_address1')
     				->post('agen_com_address2')
+                    ->post('agen_com_geo')
+                    ->post('agen_com_province')
+                    ->post('agen_com_amphur')
     				->post('agen_com_tel')
     				->post('agen_com_fax')
     				->post('agen_com_email')
@@ -110,5 +115,15 @@ class agency_company extends Controller {
     		$this->view->setPage('path', 'Themes/manage/forms/agency/company');
     		$this->view->render('del');
     	}
+    }
+
+    /* JSON DATA */
+    public function listsProvince($id=null){
+        if( empty($id) ) $this->error();
+        echo json_encode($this->model->query('system')->getGeoProvince( $id ));
+    }
+    public function listsAmphur($id=null){
+        if( empty($id) ) $this->error();
+        echo json_encode($this->model->query('system')->getProvinceAmphur( $id ));
     }
 }

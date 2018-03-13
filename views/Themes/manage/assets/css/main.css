@@ -3382,3 +3382,73 @@ table.table-plan td{vertical-align: top;}
     padding: 1mm; 
     border-radius:1mm;
 }
+
+.status_0{
+    background-color:#58ceb1; 
+    color:#fff; 
+    padding: 1mm; 
+    border-radius:1mm;
+}
+.status_5{
+    background-color:#fad732; 
+    color:#fff; 
+    padding: 1mm; 
+    border-radius:1mm;
+}
+.status_10{
+    background-color:#f763eb; 
+    color:#fff; 
+    padding: 1mm; 
+    border-radius:1mm;
+}
+.status_20{
+    background-color:#8bb8f1; 
+    color:#fff; 
+    padding: 1mm; 
+    border-radius:1mm;
+}
+.status_25{
+    background-color:#2f80e7; 
+    color:#fff; 
+    padding: 1mm; 
+    border-radius:1mm;
+}
+.status_30{
+    background-color:#58ceb1; 
+    color:#fff; 
+    padding: 1mm; 
+    border-radius:1mm;
+}
+.status_35{
+    background-color:#43d967; 
+    color:#fff; 
+    padding: 1mm; 
+    border-radius:1mm;
+}
+.status_40{
+    background-color:#ec2121; 
+    color:#fff; 
+    padding: 1mm; 
+    border-radius:1mm;
+}
+.status_50{
+    background-color:#58ceb1; 
+    color:#fff; 
+    padding: 1mm; 
+    border-radius:1mm;
+
+}
+
+.status_enabled{
+    background-color:green; 
+    color:#fff; 
+    padding: 1mm; 
+    border-radius:1mm;
+}
+.status_disabled{
+    background-color:red; 
+    color:#fff; 
+    padding: 1mm; 
+    border-radius:1mm;
+
+}

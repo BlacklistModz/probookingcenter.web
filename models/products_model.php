@@ -36,7 +36,7 @@ class Products_Model extends Model{
             
             'time'=> isset($_REQUEST['time'])? $_REQUEST['time']:time(),
             
-            // 'q' => isset($_REQUEST['q'])? $_REQUEST['q']:null,
+            'q' => isset($_REQUEST['q'])? $_REQUEST['q']:null,
 
         ), $options);
 
@@ -116,6 +116,10 @@ class Products_Model extends Model{
         $sql = "SELECT {$_field} FROM {$_table} {$condition} {$groupby} {$orderby} {$limit}";
         if( isset($_GET['chong_debug']) ){ if( $_GET['chong_debug']=='sql' ){ echo $sql; die; } }
         $arr['lists'] = $this->buildFrag( $this->db->select($sql, $params ), $options );
+
+        if( !empty($options["office"]) ){
+            $arr['total'] = count($this->db->select("SELECT {$_field} FROM {$_table} {$condition} {$groupby} {$orderby}", $params));
+        }
 
         if( ($options['pager']*$options['limit']) >= $arr['total'] ) $options['more'] = false;
         $arr['options'] = $options;
@@ -318,7 +322,7 @@ class Products_Model extends Model{
                 WHERE 
                         booking.per_id=:id
                     AND booking.bus_no=:bus_no
-                    AND booking_list.book_list_code IN ('1','2','3','4','5')
+                    AND booking_list.book_list_code IN ('1','2','3')
                     AND booking.status != 40
             ");
             $sth->execute( array( ':id'=> $id, ':bus_no'=> $value['bus_no']) );
@@ -381,7 +385,7 @@ class Products_Model extends Model{
             FROM booking_list LEFT JOIN booking ON booking.book_code=booking_list.book_code 
             WHERE 
                     booking.per_id=:id
-                AND booking_list.book_list_code IN ('1','2','3','4','5')
+                AND booking_list.book_list_code IN ('1','2','3')
                 AND booking.status != 40
         ");
         $sth->execute( array( ':id'=> $id) );

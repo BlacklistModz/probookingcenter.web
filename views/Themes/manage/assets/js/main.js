@@ -2281,6 +2281,149 @@ if ( typeof Object.create !== 'function' ) {
 		});
 	};
 	$.fn.reportDaily.options = {};
+
+	var reportRecevied = {
+		init: function(options, elem) {
+			var self = this;
+			self.elem = elem;
+			self.$elem = $(elem);
+
+			self.options = $.extend( {}, $.fn.reportDaily.options, options );
+
+			// self.$date = self.$elem.find('[name=date]');
+			self.$country = self.$elem.find('[name=country_id]');
+			self.$series = self.$elem.find('[name=ser_id]');
+			self.$bankbook = self.$elem.find('[name=bankbook_id]');
+
+			self.$submit = self.$elem.find('.js-search');
+
+			self.setElem();
+			self.Event();
+		},
+		setElem: function(){
+			var self = this;
+			self.setSeries();
+		},
+		Event: function(){
+			var self = this;
+
+			self.$country.change(function(){
+				self.setSeries();
+			});
+
+			self.$submit.click(function(){
+				self.setReport();
+			});
+		},
+		setSeries: function(){
+			var self = this;
+			var country = self.$country.val();
+			self.$series.empty();
+			self.$series.append( $('<option>', {text:'- ทั้งหมด -', value:''}) );
+			$.get( Event.URL + 'reports/getProducts/' + country, function(res){
+				$.each( res, function(i, obj) {
+					self.$series.append( $('<option>', {text:obj.code, value:obj.id}) );
+				});
+			},'json');
+		},
+		setReport: function(){
+			var self = this;
+
+			var date = self.$elem.find('[name=date]').val();
+			var country = self.$country.val();
+			var series = self.$series.val();
+			var bankbook = self.$bankbook.val();
+
+			$.get( Event.URL + 'reports/recevied_daily/', {date:date, country:country, series:series, bankbook:bankbook}, function(res){
+				self.$elem.find("#reportDaily").html( res );
+			});
+		}
+	};
+	$.fn.reportRecevied = function( options ) {
+		return this.each(function() {
+			var $this = Object.create( reportRecevied );
+			$this.init( options, this );
+			$.data( this, 'reportRecevied', $this );
+		});
+	};
+	$.fn.reportRecevied.options = {};
+
+	var formAgencyCompany = {
+		init: function(options, elem) {
+			var self = this;
+			self.elem = elem;
+			self.$elem = $(elem);
+
+			self.options = $.extend( {}, $.fn.reportDaily.options, options );
+			self.$geo = self.$elem.find("#agen_com_geo");
+			self.$province = self.$elem.find('#agen_com_province');
+			self.$amphur = self.$elem.find("#agen_com_amphur");
+
+			self.currProvince = self.options.province;
+			self.currAmphur = self.options.amphur;
+
+			self.setElem();
+			self.Event();
+		},
+		setElem: function(){
+			var self = this;
+
+			if( self.$geo.val() ){
+				self.setProvince();
+			}
+			if( self.currProvince ){
+				self.setAmphur();
+			}
+		},
+		Event: function(){
+			var self = this;
+
+			self.$geo.change(function(){
+				self.setProvince();
+			});
+			self.$province.change(function(){
+				self.setAmphur();
+			});
+		},
+		setProvince: function(){
+			var self = this;
+			var geo = self.$geo.val();
+			$.get( Event.URL + 'agency_company/listsProvince/'+geo, function(res){
+				self.$province.empty();
+				self.$province.append( $('<option>', {value:"", text:"--- เลือกจังหวัด ---"}) );
+				$.each( res, function(i, obj) {
+					var li = $('<option>', {value:obj.id, text:obj.name, 'data-id':obj.id});
+					if( self.currProvince == obj.id ){
+						li.prop('selected', true);
+					}
+					self.$province.append( li );
+				});
+			},'json' );
+		},
+		setAmphur: function(){
+			var self = this;
+			var province = self.$province.val() || self.currProvince;
+			$.get( Event.URL + 'agency_company/listsAmphur/'+province, function(res){
+				self.$amphur.empty();
+				self.$amphur.append( $('<option>', {value:"", text:"--- เลือกเขต/อำเภอ ---"}) );
+				$.each( res, function(i, obj){
+					var li = $('<option>', {value:obj.id, text:obj.name, 'data-id':obj.id});
+					if( self.currAmphur == obj.id ){
+						li.prop('selected', true);
+					}
+					self.$amphur.append( li );
+				});
+			},'json' );
+		}
+	}
+	$.fn.formAgencyCompany = function( options ) {
+		return this.each(function() {
+			var $this = Object.create( formAgencyCompany );
+			$this.init( options, this );
+			$.data( this, 'formAgencyCompany', $this );
+		});
+	};
+	$.fn.formAgencyCompany.options = {};
 	
 })( jQuery, window, document );
 

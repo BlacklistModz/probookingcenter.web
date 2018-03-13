@@ -31,6 +31,25 @@ $form 	->field('agen_com_address2')
 		->autocomplete('off')
 		->value( !empty($this->item['com_address2']) ? $this->item['com_address2'] : '' );
 
+$form 	->field('agen_com_geo')
+		->label("ภาค/โซน*")
+		->addClass('inputtext')
+		->autocomplete('off')
+		->select( $this->geo, 'id', 'name', '--- กรุณาเลือกภาค/โซน ---' )
+		->value( !empty($this->item["com_geo"]) ? $this->item["com_geo"] : '' );
+
+$form 	->field('agen_com_province')
+		->label("จังหวัด*")
+		->addClass('inputtext')
+		->autocomplete('off')
+		->select( array() );
+
+$form 	->field('agen_com_amphur')
+		->label("เขต/อำเภอ")
+		->addClass('inputtext')
+		->autocomplete("off")
+		->select( array() );
+
 $form 	->field('agen_com_tel')
 		->label("เบอร์โทรศัพท์")
 		->addClass('inputtext')
@@ -105,8 +124,13 @@ $form 	->field("agen_com_guarantee")
 #body
 $arr['body'] = $form->html();
 
+$options = $this->fn->stringify( array(
+	'province' => !empty($this->item["com_province"]) ? $this->item["com_province"] : '',
+	'amphur' => !empty($this->item["com_amphur"]) ? $this->item["com_amphur"] : ''
+) );
+
 #form
-$arr['form'] = '<form class="js-submit-form" method="post" action="'.URL.'agency_company/save" enctype="multipart/form-data"></form>';
+$arr['form'] = '<form class="js-submit-form" method="post" action="'.URL.'agency_company/save" enctype="multipart/form-data" data-plugins="formAgencyCompany" data-options="'.$options.'"></form>';
 
 # fotter: button
 $arr['button'] = '<button type="submit" class="btn btn-primary btn-submit"><span class="btn-text">บันทึก</span></button>';

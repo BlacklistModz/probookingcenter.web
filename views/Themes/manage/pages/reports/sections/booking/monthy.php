@@ -1,18 +1,35 @@
-<style type="text/css">
-	.uiPopover{
-		display: block;
-	}
-</style>
 <div id="mainContainer" class="clearfix" data-plugins="main">
 	<div role="main">
 		<div class="pal">
-			<h3 class="fwb"><i class="icon-ticket mrs"></i>Daily Booking Report</h3>
+			<h3 class="fwb"><i class="icon-ticket mrs"></i>Monthy Booking Report</h3>
 			<div class="uiBoxWhite mts pam" data-plugins="reportDaily">
 				<div class="clearfix">
 					<ul class="lfloat">
 						<li style="display:inline-block;">
-							<label for="date" class="label fwb">วันที่จอง</label>
-							<input type="date" name="date" value="<?=date("Y-m-d")?>" data-plugins="datepicker">
+							<label for="month" class="label fwb">เดือนที่จอง</label>
+							<select name="month" class="inputtext">
+								<?php 
+								for($i=1;$i<=12;$i++){
+									$sel = '';
+									if( $i == date("n") ) $sel = 'selected="1"';
+									echo'<option '.$sel.' value="'.sprintf("%02d", $i).'">'.$this->fn->q('time')->month($i, true).'</option>';
+								}
+								?>
+							</select>
+						</li>
+						<li style="display:inline-block;">
+							<label for="year" class="label fwb">ปีที่จอง</label>
+							<select name="year" class="inputtext">
+								<?php 
+								for($i=0;$i<5;$i++){
+									$sel = '';
+									$year = date("Y")-$i;
+									if( date("Y") == $year ) $sel = 'selected="1"';
+									echo '<option '.$sel.' value="'.$year.'">'.($year + 543).'</option>';
+								}
+								?>
+							</select>
+							
 						</li>
 						<li style="display:inline-block;">
 							<label for="country_id" class="label fwb">ประเทศ</label>
@@ -95,7 +112,9 @@
 <script type="text/javascript">
 	$('.js-search').click(function(){
 
-		var date = $('[name=date]').val();
+		// var date = $('[name=date]').val();
+        var month = $('[name=month]').val();
+        var year = $('[name=year]').val();
 		var country = $('[name=country_id]').val();
 		var series = $('[name=ser_id]').val();
 		var sale = $('[name=user_id]').val();
@@ -110,9 +129,10 @@
 
 		$.ajax({
 			type: "POST",
-			url: Event.URL + 'reports/booking_daily/',
-			data: { date:date, country:country, series: series, sale:sale, company:company, agency:agency, status:status }
+			url: Event.URL + 'reports/booking_monthy/',
+			data: { month:month, year:year, country:country, series: series, sale:sale, company:company, agency:agency, status:status }
 		}).done(function( html ) {
+            
 			$("#reportDaily").html( html );
 		});
 	});

@@ -248,4 +248,34 @@ class System_Model extends Model{
         return $is;
     }
 
+    public function update_close_period(){
+        $date = date("Y-m-d");
+        $this->db->update('period', array('status'=>3), "per_date_start < {$date} AND status IN ('1','2')");
+    }
+    public function update_prefix_number(){
+        $month = date('m');
+        $data = array(
+            'pre_year' => date('y'),
+            'pre_month' => $month,
+            'pre_booking' => 1,
+            'pre_invoice' => 1,
+            'pre_receipt' => 1
+        );
+        $this->db->update('prefixnumber', $data, "pre_month <> {$month}");
+    }
+    public function geo(){
+        return $this->db->select("SELECT GEO_ID AS id, GEO_NAME AS name FROM geography");
+    }
+    public function province(){
+        return $this->db->select("SELECT PROVINCE_ID AS id, PROVINCE_NAME AS name FROM province");
+    }
+    public function getGeoProvince( $geo_id ){
+        return $this->db->select("SELECT PROVINCE_ID AS id, PROVINCE_NAME AS name FROM province WHERE GEO_ID={$geo_id} ORDER BY PROVINCE_NAME ASC");
+    }
+    public function district(){
+        return $this->db->select("SELECT AMPHUR_ID AS id, AMPHUR_NAME AS name FROM amphur");
+    }
+    public function getProvinceAmphur( $province_id ){
+        return $this->db->select("SELECT AMPHUR_ID AS id, AMPHUR_NAME AS name FROM amphur WHERE PROVINCE_ID={$province_id} ORDER BY AMPHUR_NAME ASC");
+    }
 }

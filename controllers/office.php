@@ -66,6 +66,19 @@ class Office extends Controller {
                 $this->error();
             }
         }
+        elseif( $section == 'products' ){
+            if( empty($tap) ) $tap = 'promotions';
+            if( $tap == 'promotions' ){
+                if( $this->format=='json' ){
+                    $results = $this->model->query('promotions')->lists();
+                    $this->view->setData('results', $results);
+                    $render = "settings/sections/products/promotions/json";
+                }
+                else{
+                    $this->view->setData('status', $this->model->query('promotions')->status());
+                }
+            }
+        }
         else{
         	$this->error();
         }
@@ -82,15 +95,45 @@ class Office extends Controller {
             if( empty($tap) ) $tap = "daily";
             $this->view->setData('tap', $tap);
             if( $tap == "daily" ){
-
-                $this->view->js('jquery/jquery-selector.min')
-                           ->css('jquery-selector');
-
+                $this->view->setData('country', $this->model->query('products')->categoryList());
+                $this->view->setData('sales', $this->model->query('user')->lists( array('group'=>5, 'unlimit'=>true) ));
+                $this->view->setData('company', $this->model->query('agency_company')->lists( array('unlimit'=>true, 'status'=>1,'sort'=>'com_name') ));
+                $this->view->setData('status', $this->model->query('booking')->status());
+            }else if($tap =="monthy"){
+               
+                $this->view->setData('country', $this->model->query('products')->categoryList());
+                $this->view->setData('sales', $this->model->query('user')->lists( array('group'=>5, 'unlimit'=>true) ));
+                $this->view->setData('company', $this->model->query('agency_company')->lists( array('unlimit'=>true, 'status'=>1,'sort'=>'com_name') ));
+                $this->view->setData('status', $this->model->query('booking')->status());
+            }else{
+                $this->error();
+            }
+        }
+        elseif( $section == "recevied" ){
+            if( empty($tap) ) $tap = "daily";
+            $this->view->setData('tap', "recevied_".$tap);
+            if( $tap == "daily" ){
+                $this->view->setData('country', $this->model->query('products')->categoryList());
+                $this->view->setData('bank', $this->model->query("bankbook")->lists());
+            }
+            elseif( $tap == "monthy" ){
+                $this->view->setData('country', $this->model->query('products')->categoryList());
+                $this->view->setData('bank', $this->model->query('bankbook')->lists());
+            }
+        }
+        elseif( $section == "period" ){
+            if( empty($tap) ) $tap = "monthy";
+            $this->view->setData('tap', "period_".$tap);
+            if( $tap == "monthy" ){
                 $this->view->setData('country', $this->model->query('products')->categoryList());
                 $this->view->setData('sales', $this->model->query('user')->lists( array('group'=>5, 'unlimit'=>true) ));
                 $this->view->setData('company', $this->model->query('agency_company')->lists( array('unlimit'=>true, 'status'=>1,'sort'=>'com_name') ));
                 $this->view->setData('status', $this->model->query('booking')->status());
             }
+        }
+        elseif( $section == "monitor" ){
+            $this->view->setData('tap', "monitor");
+            $this->view->setData('country', $this->model->query('products')->categoryList());
         }
         else{
             $this->error();
@@ -121,26 +164,41 @@ class Office extends Controller {
         }
         $this->view->render( $render );
     }
-      public function payment(){
+    public function payment(){
 
         $this->view->setPage('title', 'จัดการชำระเงิน');
         $this->view->setPage('on', 'agency');
 
-      
-            if( $this->format=='json' ){
-                $results = $this->model->query('payment')->lists();
-                $this->view->setData('results', $results);
-                $render = "payment/lists/json";
-            }
-            else{
-        
-                $this->view->setData('payment', $this->model->query('payment')->lists( array('unlimit'=>true) ));
-               //print_r($this->model->query('payment')->lists( array('unlimit'=>true)));die;
-                $this->view->setData('status', $this->model->query('agency')->status());
-                $render = "payment/lists/display";
-            }
-            $this->view->render( $render );
+
+        if( $this->format=='json' ){
+            $results = $this->model->query('payment')->lists();
+            $this->view->setData('results', $results);
+            $render = "payment/lists/json";
         }
-        
-    
+        else{
+
+            $this->view->setData('payment', $this->model->query('payment')->lists( array('unlimit'=>true) ));
+               //print_r($this->model->query('payment')->lists( array('unlimit'=>true)));die;
+            $this->view->setData('status', $this->model->query('agency')->status());
+            $render = "payment/lists/display";
+        }
+        $this->view->render( $render );
+    }
+
+    public function series(){
+        $this->view->setPage('title', 'ซีรีย์ทัวร์');
+        $this->view->setPage('on', 'series');
+
+        if( $this->format=='json' ){
+            $results = $this->model->query('products')->lists( array('office'=>true, 'period'=>true) );
+            // print_r($results);die;
+            $this->view->setData('results', $results);
+            $render = "series/lists/json";
+        }
+        else{
+            $this->view->setData("category", $this->model->query("products")->categoryList());
+            $render = "series/lists/display";
+        }
+        $this->view->render( $render );
+    }
 }

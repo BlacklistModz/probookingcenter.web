@@ -10,7 +10,7 @@ $form   ->field("user_name")
         ->label($this->lang->translate('Username'))
         ->addClass('inputtext')
         ->autocomplete("off")
-        ->value( !empty($this->me['login']) ? $this->me['login']:''  );
+        ->value( !empty($this->me['name']) ? $this->me['name']:''  );
 
 // $form   ->field("user_lang")
 //         ->label($this->lang->translate('Language'))

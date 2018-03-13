@@ -41,6 +41,14 @@ if( !empty($sub) ){
 	$menu[] = array('text'=> 'Agency', 'sub'=>$sub, 'url'=>$this->pageURL.'settings/agency');
 }
 
+/*Promotions*/
+$sub = array();
+$sub[] = array('text'=>'โปรโมชั่น', 'key'=>'promotions', 'url'=>$this->pageURL.'settings/products/promotions');
+if( !empty($sub) ){
+	$this->count_nav+=count($sub);
+	$menu[] = array('text'=>'ส่วนเสริม', 'sub'=>$sub, 'url'=>$this->pageURL.'settings/products');
+}
+
 // /**/
 // /* Sponsor */
 // /**/
