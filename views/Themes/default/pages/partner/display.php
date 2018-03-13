@@ -3,7 +3,28 @@
 		<?php $i=1; foreach($this->results['lists'] as $key => $item) { ?>
 		<div class="span5 mts mbs" style="width: 550px">
 			<div class="card">
-				<h3 class="fwb"><i class="icon-handshake-o"></i> <?=$item['name']?></h3>
+
+				<?php
+				// เพิ่ม logo
+				if (
+					(!empty($item['logo_img']))
+					&& ($item['logo_img'] != "undefined")
+				) {
+					// ถ้าเจอรูปให้โหลดรุปนี้
+					$image = substr(strrchr($item['logo_img'],"/"),1);
+					$logo_path = "http://localhost/probookingcenter.admin/admin/upload/company_agency/".$image;
+				}
+				else {
+					//ถ้าไม่ได้กำหนดรูปให้โหลดรูปนี้
+					$logo_path ="http://localhost/probookingcenter.admin/admin/upload/company_agency/probookingcenter_logo.png";
+				}
+				?>
+
+				<img src="<?= $logo_path ?>" style="height: 100px; width: 100px; border-radius: 5px;"/>
+
+				<h3 class="fwb">
+					<i class="icon-handshake-o"></i> <?=$item['name']?>
+				</h3>
 			</div>
 		</div>
 		<?php $i++; } ?>
